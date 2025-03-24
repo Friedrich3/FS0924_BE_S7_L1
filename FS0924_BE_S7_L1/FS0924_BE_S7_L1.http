@@ -1,0 +1,6 @@
+@FS0924_BE_S7_L1_HostAddress = http://localhost:5019
+
+GET {{FS0924_BE_S7_L1_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
