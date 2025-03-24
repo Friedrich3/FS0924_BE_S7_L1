@@ -24,7 +24,7 @@ namespace FS0924_BE_S7_L1.Controllers
             {
                 return BadRequest(new
                 {
-                    message = "BadRequest"
+                    message = "Bad Request"
                 });
             }
             else if (!ListStudenti.Any())
@@ -51,14 +51,31 @@ namespace FS0924_BE_S7_L1.Controllers
             {
                 return BadRequest(new
                 {
-                    message = "Qualcosa e' andato storto!"
+                    message = "ScemoScemotto due proprieta' in croce messe bene, manco quelle! :( "
                 });
             }
             return Ok(new
             {
                 message = "Studente creato con successo!"
             });
+        }
 
+        [HttpGet("/byEmail")]
+        public async Task<IActionResult> TrovaPerEmail([FromQuery] string email)
+        {
+            var result = await _studenteServices.FindByEmail(email);
+
+            if(result == null)
+            {
+                return NotFound(new
+                {
+                    message = "Non risulta nessuno studente con quella email"
+                });
+            }
+            return Ok(new {
+                message = "Studente trovato con successo!" ,
+                studente = result
+            }); 
         }
 
 

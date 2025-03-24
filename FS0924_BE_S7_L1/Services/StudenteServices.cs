@@ -45,8 +45,20 @@ namespace FS0924_BE_S7_L1.Services
             {
                return null;
             }
-
         }
+
+        public async Task<Studente?> FindByEmail(string email) {
+            try
+            {
+                var studente = await _context.Studenti.FirstOrDefaultAsync(p => p.Email == email);
+                return studente;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
 
 
     }
