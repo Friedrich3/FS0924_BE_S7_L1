@@ -13,6 +13,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<StudenteServices>();
+builder.Services.AddScoped<StudentProfileServices>();
 
 var app = builder.Build();
 

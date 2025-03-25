@@ -1,4 +1,6 @@
 ﻿using FS0924_BE_S7_L1.Data;
+using FS0924_BE_S7_L1.DTOs.Studente;
+using FS0924_BE_S7_L1.DTOs.StudentProfile;
 using FS0924_BE_S7_L1.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,11 +23,18 @@ namespace FS0924_BE_S7_L1.Services
             } catch { return false; }
         }
 
-        public async Task<bool> AddNew(Studente studente)
+        public async Task<bool> AddNew(AddStudentRequestDto studente)
         {
             try
             {
-                _context.Studenti.Add(studente);
+                var newstudent = new Studente()
+                {
+                    Nome = studente.Nome,
+                    Cognome = studente.Cognome,
+                    Email = studente.Email,
+
+                };
+                _context.Studenti.Add(newstudent);
                 return await SaveAsync();
             }
             catch
@@ -34,12 +43,31 @@ namespace FS0924_BE_S7_L1.Services
             }
         }
 
-        public async Task<List<Studente>?> GetAll()
+        public async Task<ListUpdateStudenteDto?> GetAll()
         {
             try
             {
-                var list = await _context.Studenti.ToListAsync();
-                return list;
+                var lista = new ListUpdateStudenteDto() {ListaStudenti = new List<UpdateStudenteRequestDto>() };
+                var list = await _context.Studenti.Include(p=> p.StudenteProfile).ToListAsync();
+                foreach (var item in list) 
+                {
+                    var studente = new UpdateStudenteRequestDto()
+                    {
+                        Nome = item.Nome,
+                        Cognome = item.Cognome,
+                        Email = item.Email,
+                        StudentProfile = item.StudenteProfile!= null ? new AddStudentProfileDto()
+                        {
+                            FirstName = item.StudenteProfile.FirstName,
+                            LastName = item.StudenteProfile.LastName,
+                            FiscalCode = item.StudenteProfile.FiscalCode,
+                            BirthDate = item.StudenteProfile.BirthDate,
+
+                        }: null,
+                    };
+                    lista.ListaStudenti.Add(studente);
+                }
+                return lista;
             }
             catch
             {
@@ -47,15 +75,60 @@ namespace FS0924_BE_S7_L1.Services
             }
         }
 
-        public async Task<Studente?> FindByEmail(string email) {
+        public async Task<ByEmailStudentResponseDto?> FindByEmail(string email) {
             try
             {
-                var studente = await _context.Studenti.FirstOrDefaultAsync(p => p.Email == email);
+                var result = await _context.Studenti.FirstOrDefaultAsync(p => p.Email == email);
+                if (result == null) {  return null; }
+                var studente = new ByEmailStudentResponseDto() 
+                { 
+                    Nome= result.Nome,
+                    Cognome= result.Cognome,
+                    Email= result.Email,
+                };
                 return studente;
             }
             catch
             {
                 return null;
+            }
+        }
+
+      public async Task<bool> PutStudente(string email, UpdateStudenteRequestDto updateStudent)
+        {
+            try
+            {
+                var toUpdateStudent = await _context.Studenti.FirstOrDefaultAsync(p => p.Email == email);
+                if (toUpdateStudent == null)
+                {
+                    return false;
+                }
+                toUpdateStudent.Nome = updateStudent.Nome;
+                toUpdateStudent.Cognome = updateStudent.Cognome;
+                toUpdateStudent.Email = updateStudent.Email;
+                return await SaveAsync();
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> DeleteStudente (string email)
+        {
+            try
+            {
+                var studente = await _context.Studenti.FirstOrDefaultAsync(p => p.Email == email);
+                if(studente == null)
+                {
+                    return false;
+                }
+                _context.Studenti.Remove(studente);
+                return await SaveAsync();
+            }
+            catch (Exception ex)
+            {
+                return false;
             }
         }
 

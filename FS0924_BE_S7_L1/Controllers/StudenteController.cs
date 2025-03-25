@@ -1,4 +1,5 @@
-﻿using FS0924_BE_S7_L1.Models;
+﻿using FS0924_BE_S7_L1.DTOs.Studente;
+using FS0924_BE_S7_L1.Models;
 using FS0924_BE_S7_L1.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -20,14 +21,14 @@ namespace FS0924_BE_S7_L1.Controllers
         public async Task<IActionResult> GetAllStudents()
         {
             var ListStudenti = await _studenteServices.GetAll();
-            if (ListStudenti == null)
+            if (ListStudenti.ListaStudenti == null)
             {
                 return BadRequest(new
                 {
                     message = "Bad Request"
                 });
             }
-            else if (!ListStudenti.Any())
+            else if (!ListStudenti.ListaStudenti.Any())
             {
                 return NotFound(new
                 {
@@ -43,15 +44,16 @@ namespace FS0924_BE_S7_L1.Controllers
         }
 
         [HttpPost("/add")] 
-        public async Task<IActionResult> AddStudent([FromBody] Studente studente)
+        public async Task<IActionResult> AddStudent([FromBody] AddStudentRequestDto studente)
         {
+
             var result = await _studenteServices.AddNew(studente);
 
             if (!result)
             {
                 return BadRequest(new
                 {
-                    message = "ScemoScemotto due proprieta' in croce messe bene, manco quelle! :( "
+                    message = "Ops qualcosa e' andato storto :( "
                 });
             }
             return Ok(new
@@ -67,9 +69,9 @@ namespace FS0924_BE_S7_L1.Controllers
 
             if(result == null)
             {
-                return NotFound(new
+                return BadRequest(new
                 {
-                    message = "Non risulta nessuno studente con quella email"
+                    message = "Ops qualcosa e' andato storto"
                 });
             }
             return Ok(new {
@@ -78,8 +80,41 @@ namespace FS0924_BE_S7_L1.Controllers
             }); 
         }
 
+        [HttpPut("/update")]
+        public async Task<IActionResult> UpdateStudente([FromQuery] string email, [FromBody] UpdateStudenteRequestDto updateStudent)
+        {
+            var result = await _studenteServices.PutStudente(email , updateStudent);
+
+            if (!result)
+            {
+                return BadRequest(new
+                {
+                    message = "Ops qualcosa e' andato storto"
+                });
+            }
+            return Ok(new
+            {
+                message = "Studente aggiornato con successo"
+            });
+        }
 
 
+        [HttpDelete("/delete")]
+        public async Task<IActionResult> DeleteStudent([FromQuery] string email)
+        {
+            var result = await _studenteServices.DeleteStudente(email);
+            if (!result)
+            {
+                return BadRequest(new
+                {
+                    message = "Qualcosa e' andato storto durante l'eliminazione"
+                });
+            }
+            return Ok(new
+            {
+                message = "Studente rimosso con successo"
+            });
+        }
 
     }
 }

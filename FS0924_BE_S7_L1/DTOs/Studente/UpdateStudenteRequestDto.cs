@@ -1,11 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using FS0924_BE_S7_L1.Models;
+using FS0924_BE_S7_L1.DTOs.StudentProfile;
 
-namespace FS0924_BE_S7_L1.Models
+namespace FS0924_BE_S7_L1.DTOs.Studente
 {
-    public class Studente
+    public class UpdateStudenteRequestDto
     {
-        [Key]
-        public Guid Id { get; set; }
         [Required]
         [StringLength(50)]
         public required string Nome { get; set; }
@@ -17,7 +17,6 @@ namespace FS0924_BE_S7_L1.Models
         [EmailAddress]
         public required string Email { get; set; }
 
-        public StudentProfile StudenteProfile { get; set; }
-
+        public  required AddStudentProfileDto StudentProfile { get; set; }
     }
 }
