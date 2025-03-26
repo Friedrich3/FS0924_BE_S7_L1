@@ -40,6 +40,7 @@ namespace FS0924_BE_S7_L1.Services
                     BirthDate = addstudentProfile.BirthDate,
                     StudentId = studente.Id
                 };
+                _context.StudentProfiles.Add(profile);
                 
 
 

@@ -17,6 +17,6 @@ namespace FS0924_BE_S7_L1.DTOs.Studente
         [EmailAddress]
         public required string Email { get; set; }
 
-        public  required AddStudentProfileDto StudentProfile { get; set; }
+        public  required AddStudentProfileDto? StudentProfile { get; set; }
     }
 }

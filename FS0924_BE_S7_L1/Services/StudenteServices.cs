@@ -61,7 +61,7 @@ namespace FS0924_BE_S7_L1.Services
                             FirstName = item.StudenteProfile.FirstName,
                             LastName = item.StudenteProfile.LastName,
                             FiscalCode = item.StudenteProfile.FiscalCode,
-                            BirthDate = item.StudenteProfile.BirthDate,
+                            BirthDate = item.StudenteProfile.BirthDate
 
                         }: null,
                     };

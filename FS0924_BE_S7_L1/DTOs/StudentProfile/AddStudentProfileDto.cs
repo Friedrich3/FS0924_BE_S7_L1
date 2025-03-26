@@ -19,7 +19,5 @@ namespace FS0924_BE_S7_L1.DTOs.StudentProfile
         [Required]
         [DataType(DataType.Date)]
         public required DateTime BirthDate { get; set; }
-
-        public  Guid StudentId { get; set; }
     }
 }

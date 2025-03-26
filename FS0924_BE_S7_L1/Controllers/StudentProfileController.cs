@@ -15,7 +15,7 @@ namespace FS0924_BE_S7_L1.Controllers
             _studentProfileServices = studentProfileServices;
         }
 
-        [HttpGet("/newprofile")]
+        [HttpPost("/newprofile")]
         public async Task<IActionResult> AddProfile ([FromQuery]string email, [FromBody]AddStudentProfileDto addStudentProfileDto)
         {
             var result= await _studentProfileServices.CreateProfile(addStudentProfileDto, email);
@@ -31,3 +31,4 @@ namespace FS0924_BE_S7_L1.Controllers
 
     }
 }
+    
